@@ -279,17 +279,18 @@
                             
             <!-- BULLETS -->
             <div class="flex justify-center mt-10 space-x-3">
-                <button onclick="goToSlide(0)"
-                    class="w-3 h-3 rounded-full bg-white transition"
-                    id="dot0"></button>
+    <button onclick="goToSlide(0)"
+        class="w-3 h-3 rounded-full transition"
+        id="dot0"></button>
 
-                <button onclick="goToSlide(1)"
-                    class="w-3 h-3 rounded-full bg-white/30 hover:bg-white transition"
-                    id="dot1"></button>
-                <button onclick="goToSlide(2)"
-                    class="w-3 h-3 rounded-full bg-white/30 hover:bg-white transition"
-                    id="dot2"></button>
-            </div>
+    <button onclick="goToSlide(1)"
+        class="w-3 h-3 rounded-full transition"
+        id="dot1"></button>
+
+    <button onclick="goToSlide(2)"
+        class="w-3 h-3 rounded-full transition"
+        id="dot2"></button>
+</div>
 
         </div>
 
@@ -378,43 +379,85 @@
 </footer>
 
 <script>
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-    const toggleBtn = document.getElementById("theme-toggle");
-    const body = document.getElementById("body");
-    const navbar = document.getElementById("navbar");
-    const footer = document.getElementById("footer");
+const toggleBtn = document.getElementById("theme-toggle");
+const body = document.getElementById("body");
+const navbar = document.getElementById("navbar");
+const footer = document.getElementById("footer");
 
-    function enableDark() {
-        body.classList.replace("bg-white", "bg-black");
-        body.classList.replace("text-black", "text-white");
-        navbar.classList.replace("bg-white/70", "bg-black/50");
-        navbar.classList.replace("border-black/10", "border-white/10");
-        footer.classList.replace("bg-white", "bg-black");
-        footer.classList.replace("border-black/10", "border-white/10");
-        toggleBtn.textContent = "☀️";
-        localStorage.setItem("theme", "dark");
-    }
+const slider = document.getElementById("slider");
 
-    function enableLight() {
-        body.classList.replace("bg-black", "bg-white");
-        body.classList.replace("text-white", "text-black");
-        navbar.classList.replace("bg-black/50", "bg-white/70");
-        navbar.classList.replace("border-white/10", "border-black/10");
-        footer.classList.replace("bg-black", "bg-white");
-        footer.classList.replace("border-white/10", "border-black/10");
-        toggleBtn.textContent = "🌙";
-        localStorage.setItem("theme", "light");
-    }
+const dots = [
+    document.getElementById("dot0"),
+    document.getElementById("dot1"),
+    document.getElementById("dot2")
+];
 
-    toggleBtn.addEventListener("click", () => {
-        body.classList.contains("bg-black") ? enableLight() : enableDark();
+function updateDots(activeIndex) {
+    const isDark = body.classList.contains("bg-black");
+
+    dots.forEach((dot, index) => {
+        dot.className = "w-3 h-3 rounded-full transition";
+
+        if (index === activeIndex) {
+            dot.classList.add(isDark ? "bg-white" : "bg-black");
+        } else {
+            dot.classList.add(isDark ? "bg-white/30" : "bg-black/30");
+        }
+    });
+}
+
+function goToSlide(index) {
+    slider.scrollTo({
+        left: slider.clientWidth * index,
+        behavior: "smooth"
     });
 
-    if (localStorage.getItem("theme") === "dark") enableDark();
+    updateDots(index);
+}
+
+function enableDark() {
+    body.classList.replace("bg-white", "bg-black");
+    body.classList.replace("text-black", "text-white");
+    navbar.classList.replace("bg-white/70", "bg-black/50");
+    navbar.classList.replace("border-black/10", "border-white/10");
+    footer.classList.replace("bg-white", "bg-black");
+    footer.classList.replace("border-black/10", "border-white/10");
+    toggleBtn.textContent = "☀️";
+    localStorage.setItem("theme", "dark");
+
+    updateDots(0);
+}
+
+function enableLight() {
+    body.classList.replace("bg-black", "bg-white");
+    body.classList.replace("text-white", "text-black");
+    navbar.classList.replace("bg-black/50", "bg-white/70");
+    navbar.classList.replace("border-white/10", "border-black/10");
+    footer.classList.replace("bg-black", "bg-white");
+    footer.classList.replace("border-white/10", "border-black/10");
+    toggleBtn.textContent = "🌙";
+    localStorage.setItem("theme", "light");
+
+    updateDots(0);
+}
+
+toggleBtn.addEventListener("click", () => {
+    body.classList.contains("bg-black") ? enableLight() : enableDark();
+});
+
+// Initialize theme first
+if (localStorage.getItem("theme") === "dark") {
+    enableDark();
+} else {
+    enableLight();
+}
+
+// Then initialize slider
+updateDots(0);
 </script>
-<!-- SCRIPT --> <script> const slider = document.getElementById("slider"); const dots = [ document.getElementById("dot0"), document.getElementById("dot1") ]; function goToSlide(index) { slider.scrollTo({ left: slider.clientWidth * index, behavior: "smooth" }); dots.forEach(dot => { dot.classList.remove("bg-white"); dot.classList.add("bg-white/30"); }); dots[index].classList.remove("bg-white/30"); dots[index].classList.add("bg-white"); } // Default active goToSlide(0); </script>
 </body>
 </html>
